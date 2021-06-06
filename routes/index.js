@@ -281,7 +281,11 @@ router.get('/placeorder',getcount,verifylogin,async(req,res)=>{
 router.post('/placeorder',async(req,res)=>{
   let products=await userproducthelpers.getcartproductlistfororder(req.body.userid)
   let totalprice= await userproducthelpers.gettotalamount(req.body.userid,req.body.coupencode)
-  userproducthelpers.placeorder(req.body,products,totalprice).then((orderid)=>{
+  userproducthelpers.placeorder(req.body,products,totalprice).then(async(orderid)=>{
+    let changeproductquantity = await userproducthelpers.updatequantity(orderid)
+
+ 
+
     if(req.body.payment=='COD'){
       res.json({method:'COD'})
     }else if(req.body.payment=='ONLINE'){
@@ -335,6 +339,7 @@ router.post('/placeorder',async(req,res)=>{
     }
     
   })
+  
 })
 
 

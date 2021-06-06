@@ -12,7 +12,7 @@ module.exports={
             productdescription:product.productdescription,
             productprice:parseInt(product.productprice),
             dealprice:parseInt(product.productprice),
-            productquantity:product.productquantity,
+            productquantity:parseInt(product.productquantity),
             category:product.category,
             brand:product.brand
          }).then((data)=>{
@@ -41,7 +41,7 @@ module.exports={
     updatingproduct:(body)=>{
         console.log(parseInt(body.productprice))
         var myqueryid ={_id:ObjectId(body.productid)}
-        var newvalues ={$set:{productname:body.productname,productdescription:body.productdescription,productprice:parseInt(body.productprice),productquantity:body.productquantity,
+        var newvalues ={$set:{productname:body.productname,productdescription:body.productdescription,productprice:parseInt(body.productprice),productquantity:parseInt(body.productquantity),
         category:body.category,brand:body.brand}}
         return new Promise(async(resolve,reject)=>{
             var product=await db.get().collection(collections.PRODUCTCOLLECTION).findOneAndUpdate(myqueryid,newvalues)

@@ -555,6 +555,22 @@ module.exports ={
                 resolve(orderdetailsforinvoice)
             })
            
+        },
+
+
+        updatequantity:(orderid)=>{
+            return new Promise(async(resolve,resject)=>{
+                var findorder=await db.get().collection(collections.ORDER_COLLECTION).findOne({_id:ObjectId(orderid)})
+                findorder.products.forEach(element => {
+                    console.log(element._id)
+                    db.get().collection(collections.PRODUCTCOLLECTION).updateOne(
+                        {_id:ObjectId(element.item) },
+                        { $inc: { productquantity: -element.quantity} }
+                     )
+                });
+                resolve()
+            })
+
         }
 
 
