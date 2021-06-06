@@ -16,11 +16,13 @@ var fs = require('fs');
 require('dotenv').config();
 var jwt=require('jsonwebtoken')
 let nodemailer = require("nodemailer");
+let Swal = require("sweetalert2")
 const passport = require("passport")
 router.use(passport.initialize())
 router.use(passport.session())
 require('../public/javascripts/passport-setup')
-const paypal = require('paypal-rest-sdk')
+const paypal = require('paypal-rest-sdk');
+const { totaluser } = require('../adminhelpers/adminuserhelpers');
 paypal.configure({
     'mode': 'sandbox', //sandbox or live
     'client_id': 'AX3qYBMOwRGlC9vOgWarhRFjcFxxOwaSNkJhJ2GhCcGk634HvFM255BGYv8gNgbYq6rZkoY95aO0rJno',
@@ -270,8 +272,9 @@ router.post('/deleteproductfromcart',(req,res,next)=>{
 router.get('/placeorder',getcount,verifylogin,async(req,res)=>{
   let total =await userproducthelpers.gettotalamount(req.session.user._id)
   let productofcart=await userproducthelpers.getproductofcart(req.session.user._id)
-  console.log(total)
-  res.render('user/checkout',{layout:'user/userlayout',total,userdata:req.session.user,count:req.session.cartcount,productofcart:productofcart})
+  let savedaddress = await userdetailshelpers.getsavedaddress(req.session.user._id)
+
+  res.render('user/checkout',{layout:'user/userlayout',total,userdata:req.session.user,count:req.session.cartcount,productofcart:productofcart,savedaddress})
 
 })
 
@@ -722,11 +725,16 @@ router.get('/facebooksuccess',(req,res)=>{
   })
 })
 
-
-
 // facebook failure redirect page
 router.get('/facebookfailure',(req,res)=>{
   res.send('facebookfailure')
+})
+
+//place order product check for notification
+router.post('/placeorderlayout',async(req,res)=>{
+  let total =await userproducthelpers.gettotalamount(req.session.user._id)
+  console.log(req.body)
+  res.json({total})
 })
 
 

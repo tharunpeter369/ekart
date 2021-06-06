@@ -143,10 +143,13 @@
                          class="select-box select-box--primary-style" style="visibility:"name="showaddress"  id="showaddress"
                          >
                              <option selected value="CHOOSE" >Choose default address </option>
-                             <option value="HOME">Home</option>
+                                      {{#each savedaddress}}
+                                            <option value="{{this.addressdelivery}}">{{this.addressdelivery}}</option>
+                                    {{/each}}
+                             {{!-- <option value="HOME">Home</option>
                              <option value="OFFICE">Office</option>
                              <option value="ADDRESS3">Address3</option>
-                             <option value="ADDRESS4">Address4</option>
+                             <option value="ADDRESS4">Address4</option> --}}
                     </select>
              </div>
 

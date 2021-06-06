@@ -251,6 +251,15 @@ module.exports ={
                 reject(userexist=false)
             }
         })
+    },
+
+
+    getsavedaddress:(userid)=>{
+        return new Promise(async(resolve,reject)=>{
+            var savedaddress=await db.get().collection(collections.ADDREESS_COLLECTION).find({userid:ObjectId(userid)}).toArray()
+            console.log(savedaddress)
+            resolve(savedaddress)
+        })
     }
 
 

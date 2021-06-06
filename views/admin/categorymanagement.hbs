@@ -42,7 +42,7 @@
             <div class="row">
                 <div class="container">
                     <div class="row">
-                        <h2 class="text-center mt-3">CATEGORY BRAND</h2>
+                        <h2 class="text-center mt-3" style="margin-left: -30rem;">CATEGORY BRAND</h2>
                         <div class="col-sm-6 p-3" style="margin-left: 3px;">
                             <button class="btn btn-primary btn-xs" style="margin-bottom: 10px"
                                 onclick="window.location.href='/admin/addnewcategory'">ADD CATEGORY</button>
@@ -51,9 +51,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
-
-
+                        <div class="col-md-12" style="width: 80%; height: 80%;">
                             <table id="datatable" class="table table-striped table-bordered" cellspacing="0"
                                 width="100%">
                                 <thead>
@@ -66,9 +64,7 @@
                                     </tr>
                                 </thead>
                                 {{#each fetchdata}}
-
                                 <tbody>
-
                                     <tr>
                                         <td>{{this.category}}</td>
 

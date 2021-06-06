@@ -55,8 +55,6 @@
                                     <table class="table-p">
                                         <tbody>
 
-                                         
-
                                             <!--====== Row ======-->
                                                {{#each productofcart}}
                                             <tr>
@@ -163,7 +161,7 @@
                                 <div class="route-box">
                                     <div class="route-box__g1">
 
-                                        <a class="route-box__link" href="shop-side-version-2.html"><i class="fas fa-long-arrow-alt-left"></i>
+                                        <a class="route-box__link" href="/"><i class="fas fa-long-arrow-alt-left"></i>
 
                                             <span>CONTINUE SHOPPING</span></a></div>
                                     {{!-- <div class="route-box__g2">
@@ -215,20 +213,24 @@
                                                                 <td>SUBTOTAL</td>
                                                                 <td>$379.00</td>
                                                             </tr> --}}
+
                                                             <tr>
                                                                 <td>GRAND TOTAL</td>
                                                                 <td> <span id="total">Rs.{{totalamount}}</span></td>
                                                             </tr>
+
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                <div>
+                                                {{#if totalamount}}
+                                                <div id="chekout_butoon">
 {{!-- 
                                                     <button class="btn btn--e-brand-b-2" type="submit"> PROCEED TO CHECKOUT</button></div> --}}
                                                     {{!-- <button href="/placeorder" class="btn btn--e-brand-b-2"> PROCEED TO CHECKOUT</button></div> --}}
                                                     <a href="/placeorder" href="" class="btn btn--e-brand-b-2">PROCEED TO CHECKOUT</a></div>
                                                     
-                                            </div>
+                                              </div>
+                                              {{/if}}
                                         </div>
                                     </div>
                                 </form>
@@ -288,6 +290,7 @@
             },
             method:'post',
             success:(response)=>{
+                console.log(response)
                 if(response.removeproduct){
                 alert('Product removed from the cart')
                 location.reload()
@@ -295,10 +298,27 @@
                     console.log(response)
                     document.getElementById(proId).innerHTML=quantity+count
                     document.getElementById('total').innerHTML=response.total
+                    if(response.total==0){
+                        document.getElementById('chekout_butoon').style.display='none';
+                    }
+                    {{!-- if(response.total==0) --}}
                 }
             }
         })
     }
+
+    function myFunction(obj) {
+    if (obj.id == "total") {
+        console.log('hafdsfdsfdfsadfd')
+          document.getElementById("chekout_butoon").style.display="none";
+    } else {
+        document.getElementById("userinfo").style.display="block";
+    }
+}
+
+
+
+
 
 </script>
 

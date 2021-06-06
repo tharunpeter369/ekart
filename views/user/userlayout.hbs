@@ -27,6 +27,8 @@
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 </head>
 
@@ -404,7 +406,7 @@
                                                     <div class="mini-action">
 
                                                         <a class="mini-link btn--e-brand-b-2"
-                                                            href="/placeorder">PROCEED
+                                                             onclick="checkproductforalert()">PROCEED
                                                             TO CHECKOUT</a>
 
                                                         <a class="mini-link btn--e-transparent-secondary-b-2"
@@ -681,10 +683,7 @@
     <!--====== App ======-->
     <script src="/user/js/app.js"></script>
 
-
     <script src="/javascripts/script.js"></script>
-
-
 
     <!--====== Noscript ======-->
     <noscript>
@@ -704,5 +703,30 @@
         </div>
     </noscript>
 </body>
+
+    <script>
+
+
+            function checkproductforalert(){
+        
+           $.ajax({
+            url:'/placeorderlayout',
+            data:{
+                date:'clicked',
+            },
+            method:'post',
+            success:(response)=>{
+                console.log(response)
+                if(response.total==0){
+                Swal.fire('PLEASE ADD SOME PRODUCTS')
+                }else{
+                    window.location.href="/placeorder"
+                }
+            }
+        })
+    }
+
+
+</script>
 
 </html>

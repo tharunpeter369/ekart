@@ -12,6 +12,27 @@ var password = 369;
 var fs = require('fs');
 
 
+//login check middleware
+// const verifylogin=(req,res,next)=>{
+//   console.log('userlogin check')
+//   if(req.session.login){
+//     next()
+//   }else{
+//     res.redirect('/signin')
+//   }
+// }
+
+
+const verifylogin = (req,res,next)=>{
+  if (req.session.adminLogin==true) {
+    next()
+  }else{
+    req.session.adminLoginErr=true;
+    res.redirect('/admin/')
+  }
+}
+
+
 //home 
 router.get("/", function (req, res, next) {
   res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
@@ -22,6 +43,9 @@ router.get("/", function (req, res, next) {
     req.session.adminLoginErr=false;
   }
 });
+
+
+
 
 
 //login for user
@@ -56,7 +80,7 @@ router.get("/dashboard", function (req, res, next) {
 });
 
 //product management
-router.get("/productmanagement", function (req, res, next) {
+router.get("/productmanagement",verifylogin, function (req, res, next) {
   adminproducthelpers.getallproducts().then((products) => {
     res.render("admin/productmanagement", {layout: "admin/newlayoutForTable", product: products });
   });
@@ -96,7 +120,7 @@ router.post("/addproductsubmit", function (req, res, next) {
 });
 
 
-router.get("/usermanagement", function (req, res, next) {
+router.get("/usermanagement",verifylogin, function (req, res, next) {
   adminuserhelpers.fetchuser().then((fetchuserdata) => {
     res.render("admin/usermanagementtable", {layout: "admin/newlayoutForTable", userdata: fetchuserdata });
   });
@@ -202,7 +226,7 @@ router.get('/deleteproduct/:id',function(req,res){
 
 
 //catogery management page rendering
-router.get('/categorymanagement',function(req,res){
+router.get('/categorymanagement',verifylogin,function(req,res){
   producthelpers.fetchcategory().then((fetchdata)=>{
     // console.log(fetchdata)
     res.render('admin/categorymanagement',{layout:"admin/newlayoutForTable",fetchdata:fetchdata})
@@ -210,7 +234,7 @@ router.get('/categorymanagement',function(req,res){
 })
 
 //add new category brand(get)
-router.get('/addnewcategory',function(req,res){
+router.get('/addnewcategory',verifylogin,function(req,res){
   res.render('admin/addnewcategorybrand',{ layout: "admin/newlayout",exist:req.session.catogeryexist})
   req.session.catogeryexist=false;
 })
@@ -267,7 +291,7 @@ router.post('/removebrand',function(req,res){
 
 
 //order management
-router.get('/ordermanagement',function(req,res){
+router.get('/ordermanagement',verifylogin,function(req,res){
   producthelpers.getorderdetails().then((orderdetails)=>{
     res.render('admin/ordermanagmenttable',{layout:"admin/newlayoutForTable",orderdetails:orderdetails})
   })
@@ -291,10 +315,10 @@ router.get('/logout',function(req,res){
 })
 
 //sales report
-router.get("/salesreport",function(req,res){
+router.get("/salesreport",verifylogin,function(req,res){
     let current_datetime = new Date()
     producthelpers.getproductforsalesreport().then((items)=>{
-    res.render('admin/salesreport',{layout:"admin/newlayoutForTable",items:items})
+    res.render('admin/salesreport2',{layout:"admin/newlayoutForTable",items:items})
   })
 })
 
@@ -345,7 +369,7 @@ router.post('/addcoupen',function(req,res){
 
 
 //offer management
-router.get('/offermanagement',function(req,res){
+router.get('/offermanagement',verifylogin,function(req,res){
   adminproducthelpers.getallproducts().then((products) => {
     res.render('admin/offermanagementtable',{layout:"admin/newlayoutForTable",product: products})
   });
@@ -381,7 +405,7 @@ router.get('/deletecoupen/:id',function(req,res){
 
 
 //catogorry offer management
-router.get('/catgoryoffermanagement',function(req,res){
+router.get('/catgoryoffermanagement',verifylogin,function(req,res){
   adminproducthelpers.getallcategories().then((catogories) => {
     res.render('admin/categoryoffermanagement',{layout:"admin/newlayoutForTable",catogories})
   });
