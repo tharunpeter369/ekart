@@ -302,7 +302,7 @@ router.post('/placeorder',async(req,res)=>{
         "transactions": [{
             "item_list": {
                 "items": [{
-                    "name": "Red Sox Hat",
+                    "name": "product",
                     "sku": "001",
                     "price": req.session.amount,
                     "currency": "USD",
