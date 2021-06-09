@@ -294,7 +294,10 @@
                 if(response.removeproduct){
                 alert('Product removed from the cart')
                 location.reload()
-                }else{
+                }else if(response.outofstock){
+                    alert('Out of stock')
+                }
+                else{
                     console.log(response)
                     document.getElementById(proId).innerHTML=quantity+count
                     document.getElementById('total').innerHTML=response.total

@@ -1,10 +1,10 @@
+const { default: Swal } = require("sweetalert2")
 
 
 
 
 
    function addtocart(proid){
-
         $.ajax({
             url:"/addtocart/"+proid,
             method:'get',
@@ -21,7 +21,10 @@
                 }else if(response.status==false){
                     console.log(response)
                     // alert(response)
-                }else{
+                }else if(response.outofstock==true){
+                    alert('out of stock')
+                }
+                else{
                     // alert('redirect')
                     location.href='/signin'
                 }

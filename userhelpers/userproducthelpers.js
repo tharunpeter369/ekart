@@ -70,42 +70,72 @@ module.exports ={
               item:ObjectId(product_id),
               quantity:1
           }
-         
-        return new Promise(async(resolve,reject)=>{
-            let usercart=await db.get().collection(collections.CART_COLLECTION).findOne({user:user_id})
+          outofstock=false
 
-            if(usercart){
-                // updating cart with product
-                let prodexistinusercart=usercart.products.findIndex(product=>product.item==productid)
-                if(prodexistinusercart!=-1){
-                    db.get().collection(collections.CART_COLLECTION).updateOne({user:ObjectId(userid),'products.item':ObjectId(productid)},
-                    {
-                        $inc:{'products.$.quantity':1}
-                    }
-                    ).then((response)=>{
-                        resolve({status:false})
-                    })
+        
+        return new Promise(async(resolve,reject)=>{
+                findcheckingproduct = await db.get().collection(collections.PRODUCTCOLLECTION).findOne({_id:ObjectId(productid)})
+                checkoutofstock=await db.get().collection(collections.CART_COLLECTION).findOne({user:user_id})
+                console.log(checkoutofstock.products.length)
+                if(checkoutofstock.products.length!=0){
+                    checkoutofstock.products.forEach(element => {
+                        if(element.item == productid){
+                            if(findcheckingproduct.productquantity<=element.quantity || findcheckingproduct.productquantity==0){
+                                outofstock=true
+                                resolve({outofstock:true})
+                            }
+                        }else{
+                            if(findcheckingproduct.productquantity==0){
+                                outofstock=true
+                                resolve({outofstock:true})
+                            }
+                        }
+                    });
                 }else{
-                db.get().collection(collections.CART_COLLECTION).updateOne({user:user_id},
-                {
-                    $push:{products:proobj}
+                    if(findcheckingproduct.productquantity==0){
+                        outofstock=true
+                        resolve({outofstock:true})
+                    }
+                }
+
+            if(outofstock==false){
+                let usercart=await db.get().collection(collections.CART_COLLECTION).findOne({user:user_id})
+
+                if(usercart){
+                    // updating cart with product
+                    let prodexistinusercart=usercart.products.findIndex(product=>product.item==productid)
+                    if(prodexistinusercart!=-1){
+                        db.get().collection(collections.CART_COLLECTION).updateOne({user:ObjectId(userid),'products.item':ObjectId(productid)},
+                        {
+                            $inc:{'products.$.quantity':1}
+                        }
+                        ).then((response)=>{
+                            resolve({status:false})
+                        })
+                    }else{
+                    db.get().collection(collections.CART_COLLECTION).updateOne({user:user_id},
+                    {
+                        $push:{products:proobj}
+                    }
+                    
+                    ).then((response)=>{
+                        resolve({status:true})
+                    })
+                    }
+                }else{
+                    let cartObj={
+                        user:user_id,
+                        products:[proobj]
+                        
+                    }
+                    // console.log(proobj)
+                    db.get().collection(collections.CART_COLLECTION).insertOne(cartObj).then((response)=>{
+                        resolve({status:true})
+                    })
                 }
                 
-                ).then((response)=>{
-                    resolve({status:true})
-                })
-                }
-            }else{
-                let cartObj={
-                    user:user_id,
-                    products:[proobj]
-                    
-                }
-                // console.log(proobj)
-                db.get().collection(collections.CART_COLLECTION).insertOne(cartObj).then((response)=>{
-                    resolve({status:true})
-                })
             }
+
         })
 
     },
@@ -174,24 +204,45 @@ module.exports ={
         var quantity=parseInt(body.quantity)
         var prodid=body.product
         var cartid=body.cart
+        var outofstock=false
         return new Promise(async(resolve,reject)=>{
-            if(count==-1 && quantity==1){
-                await db.get().collection(collections.CART_COLLECTION).updateOne({_id:ObjectId(cartid)},
-                {
-                    $pull:{products:{item:ObjectId(prodid)}}
-                }
-                ).then((response)=>{
-                    resolve({removeproduct:true})
-                })
-            }else{
-                await db.get().collection(collections.CART_COLLECTION).updateOne({_id:ObjectId(cartid),'products.item':ObjectId(prodid)},
-                {
-                    $inc:{'products.$.quantity':count}
-                }).then((response)=>{
-                    resolve({status:true})
-                })
-                
+            if(count == 1 ){
+                findcheckingproduct = await db.get().collection(collections.PRODUCTCOLLECTION).findOne({_id:ObjectId(prodid)})
+                checkoutofstock=await db.get().collection(collections.CART_COLLECTION).findOne({_id:ObjectId(cartid)}) 
+                console.log(checkoutofstock)
+                    checkoutofstock.products.forEach(element => {
+                        if(element.item == body.product){
+                            if(findcheckingproduct.productquantity<=element.quantity){
+                                console.log('out of stock')
+                                outofstock=true
+                                resolve({outofstock:true})
+                            }
+                        } 
+                    });
             }
+
+            if(outofstock == false){
+                if(count==-1 && quantity==1){
+                    await db.get().collection(collections.CART_COLLECTION).updateOne({_id:ObjectId(cartid)},
+                    {
+                        $pull:{products:{item:ObjectId(prodid)}}
+                    }
+                    ).then((response)=>{
+                        resolve({removeproduct:true})
+                    })
+                }else{
+                    await db.get().collection(collections.CART_COLLECTION).updateOne({_id:ObjectId(cartid),'products.item':ObjectId(prodid)},
+                    {
+                        $inc:{'products.$.quantity':count}
+                    }).then((response)=>{
+                        resolve({status:true})
+                    })
+                    
+                }
+
+            }
+
+
         })
     },
 
@@ -554,7 +605,6 @@ module.exports ={
                 var orderdetailsforinvoice=await db.get().collection(collections.ORDER_COLLECTION).findOne({_id:ObjectId(para.id)})
                 resolve(orderdetailsforinvoice)
             })
-           
         },
 
 
@@ -562,7 +612,6 @@ module.exports ={
             return new Promise(async(resolve,resject)=>{
                 var findorder=await db.get().collection(collections.ORDER_COLLECTION).findOne({_id:ObjectId(orderid)})
                 findorder.products.forEach(element => {
-                    console.log(element._id)
                     db.get().collection(collections.PRODUCTCOLLECTION).updateOne(
                         {_id:ObjectId(element.item) },
                         { $inc: { productquantity: -element.quantity} }
@@ -570,8 +619,7 @@ module.exports ={
                 });
                 resolve()
             })
-
-        }
+        },
 
 
 

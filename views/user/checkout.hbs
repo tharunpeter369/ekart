@@ -475,12 +475,12 @@
 
                                                     <span class="o-card__name">
 
-                                                        <a href="product-detail.html">{{this.product.dealprice}}
+                                                        <a href="product-detail.html">{{this.product.productname}}
                                                            </a></span>
 
                                                     <span class="o-card__quantity">Quantity x {{this.quantity}}</span>
 
-                                                    <span class="o-card__price">Rs.{{this.product.productprice}}</span>
+                                                    <span class="o-card__price">Rs.{{this.product.dealprice}}</span>
                                                 </div>
                                             </div>
 
@@ -696,13 +696,6 @@
                                         </form>
                                     </div>
                                 </div> --}}
-
-
-
-
-
-
-
 
 
 
@@ -991,7 +984,6 @@
 <script>
 
     $("#coupenform").submit((e)=>{
-        console.log("hii hello")
         e.preventDefault()
         {{!-- var valuee= document.getElementById('coupenapplyfield').value
         document.getElementById('grandtotal').innerText=valuee --}}
@@ -1003,10 +995,8 @@
             success:(response)=>{
                 console.log(response)
                 if(response.discountedprice!=false){
-                    console.log('hiiiiii')
                     document.getElementById('discountedtotal').innerText='Rs.'+ response.discountedprice;
                     document.getElementById('discoutedhidden').style.display = '';
-
                     document.getElementById('discountedtota').innerText='Rs.'+ response.discountedprice;
                     document.getElementById('discoutedhidde').style.display = '';
 

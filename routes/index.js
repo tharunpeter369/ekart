@@ -395,7 +395,7 @@ router.post('/verifypayment',(req,res)=>{
 
 //display order successpage
 router.get('/ordersuccesspage',(req,res)=>{
-  res.render('user/ordersuccesspage',{layout:'user/userlayout'})
+  res.render('user/ordersuccesspage',{layout:'user/userlayout',userdata:req.session.user})
 })
 
 router.get('/myorder',verifylogin,async(req,res)=>{
