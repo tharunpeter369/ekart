@@ -230,6 +230,7 @@ router.get('/categorymanagement',verifylogin,function(req,res){
   producthelpers.fetchcategory().then((fetchdata)=>{
     // console.log(fetchdata)
     res.render('admin/categorymanagement',{layout:"admin/newlayoutForTable",fetchdata:fetchdata})
+    // res.render('admin/categorymanagement',{layout:"admin/newlayout",fetchdata:fetchdata})
   })
 })
 
