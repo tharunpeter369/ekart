@@ -41,7 +41,7 @@ passport.use(new facebookStrategy({
   // pull in our app id and secret from our auth.js file
   clientID        : "174317747963414",
   clientSecret    : "3b0598d0de66b1f3afe4dbec95762f2c",
-  callbackURL     : "http://localhost:3000/facebook/callback",
+  callbackURL     : "https://ekart.tech/facebook/callback",
   profileFields   :['id','displayName','name','gender','picture.type(large)','email']
 },// facebook will send back the token and profile
 function(token, refreshToken, profile, done) {

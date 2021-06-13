@@ -303,8 +303,8 @@ router.post('/placeorder',async(req,res)=>{
         },
         "redirect_urls": {
        
-            "return_url": "http://localhost:3000/success",
-            "cancel_url": "http://localhost:3000/cancel"
+            "return_url": "https://ekart.tech/success",
+            "cancel_url": "https://ekart.tech/cancel"
         },
         "transactions": [{
             "item_list": {
@@ -576,7 +576,7 @@ router.post('/forgetpasswordAtLogin',(req,res)=>{
       }
       console.log(payload)
       const token=jwt.sign(payload,secret,{expiresIn:'15m'})
-      let link=`http://localhost:3000/restPasswordWhenForgetPassword/${userdata._id}/${token}`;
+      let link=`https://ekart.tech/restPasswordWhenForgetPassword/${userdata._id}/${token}`;
       console.log(link)
 
         //sending email
