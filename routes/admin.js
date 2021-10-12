@@ -1,8 +1,9 @@
 var express = require("express");
+var router = express.Router();
 const { getallproducts } = require("../adminhelpers/producthelpers");
 var db=require('../config/connection')
 var collections=require('../config/collections')
-var router = express.Router();
+
 var adminproducthelpers = require("../adminhelpers/producthelpers");
 var adminuserhelpers = require("../adminhelpers/adminuserhelpers");
 const { ObjectId } = require("mongodb");
