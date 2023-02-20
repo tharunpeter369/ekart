@@ -37,6 +37,42 @@ db.connect((err)=>{      // connecting database
   }
 })
 
+// const MongoClient = require('mongodb').MongoClient;
+
+// Importing MongoClient from mongodb driver
+// const { MongoClient } = require('mongodb');
+
+// // Connecting to a local port
+// const uri = 'mongodb://127.0.0.1:27017';
+
+// const client = new MongoClient(uri, {
+// 	useUnifiedTopology: true,
+// 	useNewUrlParser: true
+// });
+
+// connect();
+
+// // ESNext syntax using async-await
+// async function connect() {
+// 	try {
+// 		await client.connect();
+// 		const db = client.db('shopping');
+// 		console.log(
+// 	`Successfully connected to db ${db.databaseName}`);
+// 	}
+// 	catch (err) {
+// 		console.error(`we encountered ${err}`);
+// 	}
+// 	finally {
+// 		client.close();
+// 	}
+// }
+
+
+
+
+
+
 
 //connecting session
 app.use(session({          
